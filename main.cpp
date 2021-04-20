@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 bool dfs(unsigned u, std::vector<std::vector<bool>>& matrix, std::vector<unsigned>& color)
-// Returns `true` is no cycle has been found
+// Returns `true` iff no cycle has been found
 {
 	// Mark as `grey`
 	color[u] = 1;
@@ -94,13 +94,13 @@ int main(int argc, char** argv) {
 		}
 	}
 	
-	// Analyze each connex component
+	// Analyze each connected component
 	const auto analyzeConnexComponents = [&]() -> bool {
 		// Mark all nodes as `white`
-		std::vector<unsigned> seen(1 + transactions.size(), 0);
+		std::vector<unsigned> color(1 + transactions.size(), 0);
 		for (auto it1: transactions)
-			if (!seen[it1.first])
-				if (!dfs(it1.first, matrix, seen))
+			if (!color[it1.first])
+				if (!dfs(it1.first, matrix, color))
 					return false;
 		return true;
 	};
