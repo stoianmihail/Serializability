@@ -41,9 +41,15 @@ int main(int argc, char** argv) {
 		exit(-1);
 	}
 	
-	// Read the input
-	std::map<unsigned, std::vector<std::pair<std::pair<bool, std::string>, unsigned>>> transactions; 
+	// Check input file
 	std::ifstream input(argv[1]);
+	if (!input.is_open()) {
+		std::cerr << "Couln't open '" << argv[1] << "'!" << std::endl;
+		exit(-1);
+	}
+	
+	// Read input file
+	std::map<unsigned, std::vector<std::pair<std::pair<bool, std::string>, unsigned>>> transactions;
 	std::string a, b, c;
 	unsigned index = 0;
 	while (input >> a >> b >> c) {
