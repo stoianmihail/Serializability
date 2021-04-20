@@ -6,22 +6,31 @@
 #include <map>
 #include <unordered_map>
 
-bool dfs(unsigned u, std::vector<std::vector<bool>>& matrix, std::vector<bool>& seen)
+bool dfs(unsigned u, std::vector<std::vector<bool>>& matrix, std::vector<unsigned>& color)
 // Returns `true` is no cycle has been found
 {
-	// Mark as seen
-	seen[u] = true;
+	// Mark as `grey`
+	color[u] = 1;
 	
 	// Visit all neighbours
 	for (unsigned index = 0, limit = matrix.size(); index != limit; ++index) {
-		// Edge?
-		if (matrix[u][index]) {
-			// Already seen?
-			if (seen[index])
-				return false;
-			dfs(index, matrix, seen);
-		}
+		// No edge?
+		if (!matrix[u][index]) continue;
+		
+		// Subtree already considered?
+		if (color[index] == 2) continue;
+		
+		// Already `grey`, i.e. cycle?
+		if (color[index] == 1)
+			return false;
+		
+		// Cycle in our subtree?
+		if (!dfs(index, matrix, color))
+			return false;
 	}
+	
+	// Mark as `black`
+	color[u] = 2;
 	return true;
 }
 
@@ -74,7 +83,7 @@ int main(int argc, char** argv) {
 				for (auto elem2: it2.second) {
 					// Conflicting operation?
 					if ((elem1.first.first || elem2.first.first) && (elem1.first.second == elem2.first.second)) {
-						// Decide the orientation of the edge?
+						// Decide the orientation of the edge
 						if (elem1.second < elem2.second)
 							matrix[it1.first][it2.first] = true;
 						else
@@ -87,7 +96,8 @@ int main(int argc, char** argv) {
 	
 	// Analyze each connex component
 	const auto analyzeConnexComponents = [&]() -> bool {
-		std::vector<bool> seen(1 + transactions.size(), false);
+		// Mark all nodes as `white`
+		std::vector<unsigned> seen(1 + transactions.size(), 0);
 		for (auto it1: transactions)
 			if (!seen[it1.first])
 				if (!dfs(it1.first, matrix, seen))
