@@ -37,7 +37,7 @@ bool dfs(unsigned u, std::vector<std::vector<bool>>& matrix, std::vector<unsigne
 int main(int argc, char** argv) {
 	// Check usage
 	if (argc != 2) {
-		std::cerr << "Usage: " << argv[0] << " <transaction file>" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " <history file>" << std::endl;
 		exit(-1);
 	}
 	
